@@ -1,0 +1,39 @@
+Intuition:
+we can xor the array numbers so that all numbers which twice will be deleted and the xor will containt the result of two distinct elements. Now we can find the right most set bit bcoz if number is distinct, they will give atleast one 1 when perform xor. This right most bit will help us to store both distinct elements distinctly.
+
+Approach:
+Xor all the numbers and find right most set bit by using (num & n-1) ^ num=> this will give us the only right most set bit.
+
+now traverse the array and take two bucket to store two distinct elements. Check if rightmostbit is set in number than add it in bucket1 otherwise in bucket2. Dont worry about the numbers which occurs twice bcoz they will be canceled whether goes in bucket1 or two.
+
+This approach will work bcoz right most bit of both distinct number's xor will be different. Means if its set in one than definitely won't be set in other bcoz thats why it generated 1 when performed XOR opertion.
+
+suppose we have a number 11-> 1011 and 7->0111 than XOR will be 1100 now see the right most set bit which is at index 2. Now check in the numbers 11 and 7, 2 bit is set in 7 and not set in 11. You can try for any test case. We have ignored all duplicate numbers as they will be canceled.
+
+We took Xor variable as long bcoz in case if Xor of all element goes to -2^31 than it will overflow if we do Xor-1;
+
+Complexity:
+Time complexity:
+As we are traversing the array once each time (While finding xor and while finding answer) so the the will be O(2n) which is O(n).
+
+Space complexity:
+As we recuire only variable space so we can say its a constant space O(1).
+
+Code:
+class Solution {
+public:
+    vector<int> singleNumber(vector<int>& nums) {
+        long Xor=0;
+        for(int i=0; i<nums.size(); i++) Xor ^= nums[i]; //Taking xor of all numbers
+
+        int rightMostBit= (Xor & Xor-1) ^ Xor; // finding the rightmost set bit
+        int bucket1=0, bucket2=0; // taking two buckets to store the two distinct numbers
+
+        for(int i=0; i<nums.size(); i++){
+            if(nums[i] & rightMostBit) bucket1 ^= nums[i]; //number goes in bucket1 if its rightmostbit is set
+            else bucket2 ^= nums[i]; //goes to bucket2 if not set
+        }
+
+        return {bucket1, bucket2};
+    }
+};

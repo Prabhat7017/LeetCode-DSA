@@ -1,0 +1,35 @@
+Intuition:
+Store the number in ones if it occurs one time and if it comes twice than delete it from ones and store it in twos. Remember the number only can be stored in ones if its not present in twos bcoz if its present in twos, it means its occuring thrice so ignore this number.
+At the end the number which occurs one time will be in ones so its the final answer.
+
+Approach:
+we will use XOR operator to add number bcoz it automatically handles the occurence of number and will use & and NOT operator to delete.
+
+ones= (ones ^ nums[i]) & ~twos; // it will create a negation of number present in two so that it can make the number in ones if its already present in two.
+
+Suppose we have a number 2 which is present in two and its bit representation is 10, now we add it in ones so nums is now 10 but as per our condition, we can not keep it in ones bcoz it is already present in two so how can we make it zero ? Here comes the use of NOT operator. If we do & of a number with its ~ number, it will be zero-> 2->10 and ~10= 01 so if we do 10 & 01=> 00 thats the use of ~ here.
+
+twos= (twos ^ nums[i]) & ~ones; //will be added in twos if deleted from ones otherwise wont be added.
+
+We are not considering third element as we know if a element occured twice, it will definitely occur thrice so we have to find out only element which occurs once !!
+
+Complexity:
+Time complexity:
+TC for this approach will be O(n) as we are traversing the array only once.
+
+Space complexity:
+we recuire no extra space so SC will be O(1)
+
+Code:
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int ones=0, twos=0;
+        for(int i=0; i<nums.size(); i++){
+            ones= (ones ^ nums[i]) & ~twos; //Add number in ones if not present in twos
+            twos= (twos ^ nums[i]) & ~ones; //Add in twos if deleted from on
+        }
+
+        return ones;
+    }
+};

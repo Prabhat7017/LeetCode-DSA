@@ -1,0 +1,33 @@
+Intuition:
+We can simply check if the character of s matches the char of t than it would be considered in subsequence otherwise check for next char of s.
+
+Approach:
+We can take two variables i and j starting 0 to traverse s and t.
+If any string is traversed full means we cant traverse more.
+
+If char at ith and jth pos in s and t string matches than we can increment both pointers otherwise we will increment only ith pointer bcoz we have to find or make subsequence in s.
+
+At the end if s is traversed full and there are still chars left in t than the remaining chars of t should be appended to s to make subsequence
+
+Complexity:
+Time complexity:
+As we are traversing the string untill anyone string is not traversed fully so TC will be O(min(n, m)) where n and m are the size of string s and t.
+
+Space complexity:
+No extra space taken so the SC will be O(1).
+
+Code:
+class Solution {
+public:
+    int appendCharacters(string s, string t) {
+        int i=0, j=0;
+        int n= s.size(), m=t.size();
+        while(i<n && j<m){ //if any of the string traversed full
+            if(s[i]==t[j]){ //if character match than increment both
+                i++, j++;
+            }else i++; //if not match check for next character of string s
+        }
+
+        return m-j;// return the number of remaining character to be traversed of string t
+    }
+};
