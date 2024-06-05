@@ -1,0 +1,42 @@
+Intuition:
+we have to find all character which are present in all strings so we can take all characters of any string in array and can check these characters in all words whether its present in all or not. No need to check all alphabets, just check for the alphbets which are present in word of strings of array.
+
+Approach:
+Basically we can store all character in form of string in a vector or array. Now traverse on this array and check for each word or words whether its present in all or not. Once checked for a particular word make sure to erase the char from word so that we dont check for same char again bcoz one char can be considered only once. Keep a flag which will set to true initially and false if any of the word of words does not consists same char.
+
+Complexity:
+Time complexity:
+Outer loop which traverse over str can be considered as constant time as max size of word can be 100 so O(100) which is equivalent to O(1).The inner loop will run nm time where n is the size of words and m is the size or word.
+So overall TC would be O(nm).
+
+Space complexity:
+Only extra space taken is O(m) where m is the size of words[0].
+
+Code:
+class Solution {
+public:
+    vector<string> commonChars(vector<string>& words) {
+        vector<string>ans;
+        
+        vector<string>str;
+        for(auto ch: words[0]){
+            str.push_back(string(1, ch)); //store one words all chars ass string to check
+        }
+
+        for(auto s: str){
+            bool flag= true;
+            for(auto& word: words){
+                if(word.find(s)==string::npos){ //check if the current char is not presnt in any of the word just make flag false and break
+                    flag=false;
+                    break;
+                }else{
+                    word.erase(word.find(s), 1); // if char is find in curr word, just erase it so that it does not searches again for same.
+                }
+            }
+
+            if(flag) ans.push_back(s); // if flag is not  false means char is present in all words so push it in ans.
+        }
+
+        return ans;
+    }
+};
