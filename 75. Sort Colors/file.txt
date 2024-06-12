@@ -1,0 +1,35 @@
+# Intuition
+<!-- Describe your first thoughts on how to solve this problem. -->
+Place all zeroes at starting and 2's at end. 1's will be automatically placed in middle.
+
+# Approach
+<!-- Describe your approach to solving the problem. -->
+Take three pointers one for zero one for two and one for traversal of array. If you encounter the 0 at current index, just swap it with 0's index value and increment 0's index. If you encounter 2 at current index just swap it with 2's index element and decrease 2's index but remember after swaping, new element at current index might be 0 so do not increase index in this case we we have to swap it again with 0's index. (This is the catch).
+
+if you encounter 1 at current index, just skip for it. 
+
+Loop will be run till i<=twoIndex bcoz we know that all elements afterwars twoIndex are 2's so no need to check them.
+
+# Complexity
+- Time complexity:
+<!-- Add your time complexity here, e.g. $$O(n)$$ -->
+As we will run this loop n times in worst case so TC is  O(n) where n is the length of vector nums.
+
+- Space complexity:
+<!-- Add your space complexity here, e.g. $$O(n)$$ -->
+No extra space is taken so SC will be O(1).
+
+# Code
+```
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        int zeroInd=0, twoInd= nums.size()-1, i=0;
+        while(i<=twoInd){
+            if(nums[i]==0) swap(nums[i++], nums[zeroInd++]);
+            else if(nums[i]==2) swap(nums[i], nums[twoInd--]);
+            else i++;
+        }
+    }
+};
+```
