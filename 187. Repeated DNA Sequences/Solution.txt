@@ -1,0 +1,55 @@
+Intuition
+The problem requires finding all 10-letter-long sequences (substrings) that occur more than once in a given DNA string. A sliding window approach combined with a hash map (unordered_map) is suitable for this task. The map will keep track of the frequency of each 10-letter substring, allowing us to identify which substrings are repeated.
+
+Approach
+Edge Case Handling: If the length of the string is less than 10, no 10-letter substring can exist, so return an empty vector.
+Use Hash Map for Frequency Count:
+Traverse the string using a sliding window of size 10.
+For each window, extract the substring and increment its count in the hash map.
+Collect Repeated Sequences:
+Iterate through the hash map to collect all substrings that have a count greater than 1.
+Detailed Steps:
+Edge Case Check: Return an empty vector if the string length is less than 10.
+Sliding Window:
+Loop from the start of the string to s.size()−10 (inclusive) to ensure we get all 10-letter substrings.
+Use substr to extract the 10-letter substring starting at each position.
+Store these substrings in an unordered_map and increment their counts.
+Identify Repeated Substrings:
+Loop through the hash map and collect substrings with counts greater than 1 into a result vector.
+Dry Run Example:
+Let's dry run the approach with the string "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT".
+
+Sliding Window:
+Extract substrings of length 10 and store their counts in the map.
+Example substrings and counts: "AAAAACCCCC" (2 times), "AAAACCCCCA" (1 time), etc.
+Map After Processing:
+{ "AAAAACCCCC": 2, "AAAACCCCCA": 1, ..., "CCCCCAAAAA": 2 }
+Result Vector:
+Collect substrings with count > 1: ["AAAAACCCCC", "CCCCCAAAAA"]
+
+Complexity
+Time complexity:
+O(n), where n is the length of the input string. This is because we process each substring of length 10 exactly once.
+
+Space complexity:
+O(n), due to the storage used by the hash map to store substrings.
+
+Code
+class Solution {
+public:
+    vector<string> findRepeatedDnaSequences(string s) {
+        if(s.size()<10) return {};
+        unordered_map<string, int>mp;
+        for(int i=0; i<s.size()-9; i++){
+            string temp= s.substr(i, 10);
+            mp[temp]++;
+        }
+        vector<string>ans;
+        for(auto it: mp){
+            cout<<it.first<<"->"<<it.second<<endl;
+            if(it.second > 1) ans.push_back(it.first);
+        }
+
+        return ans;
+    }
+};

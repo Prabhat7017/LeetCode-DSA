@@ -1,0 +1,149 @@
+Intuition
+Grid Representation: The grid is represented as a 2D array where:
+
+0 represents an empty cell.
+1 represents a fresh orange.
+2 represents a rotten orange.
+
+Rotting Process: Each minute, any fresh orange that is 4-adjacency neighbor (up, down, left, right) to a rotten orange becomes rotten.
+
+Goal: Find the minimum number of minutes that must elapse until no cell has a fresh orange. If it is impossible to rot all fresh oranges, return -1.
+
+Key Points
+All fresh oranges adjacent to a rotten orange rot simultaneously in one minute.
+Use a BFS approach to simulate this process, as BFS naturally handles the "layer-by-layer" processing needed for this problem.
+
+Approach
+Initialize the Queue with Rotten Oranges:
+
+Use a queue to store all the rotten oranges' positions along with the time (in minutes) when they became rotten.
+This initial state represents the starting point for our BFS traversal.
+BFS Traversal:
+
+Perform BFS traversal starting from all initially rotten oranges. This approach ensures that we rot all reachable fresh oranges layer by layer, minute by minute.
+Processing Each Rotten Orange:
+
+For each rotten orange, process its 4-adjacency neighbors (up, down, left, right).
+Check if the neighbor is within the grid bounds and is a fresh orange.
+If it is a fresh orange, mark it as rotten and add it to the queue with the updated minute value.
+Track the maximum time taken to rot any orange during this process.
+Edge Cases and Final Check:
+
+After the BFS traversal, check if there are any fresh oranges left in the grid. If so, return -1 because it's impossible to rot all fresh oranges.
+Otherwise, return the maximum time recorded during the traversal.
+
+Complexity
+Time complexity:
+The time complexity of the given solution is O(n×m), where n is the number of rows and m is the number of columns in the grid. Here’s the detailed breakdown:
+
+Initialization:
+
+The grid is traversed once to count fresh oranges and initialize the queue with rotten oranges. This takes O(n×m) time.
+BFS Traversal:
+
+Each cell in the grid is processed at most once. When a cell containing a fresh orange is rotted, it is added to the queue.
+Since each cell is processed once, the BFS traversal also takes O(n×m) time.
+Overall, the time complexity is O(n×m).
+
+Space complexity:
+The space complexity of the solution is also O(n×m). Here's why:
+
+Queue:
+
+In the worst case, all the cells in the grid could be rotten oranges, and they would all be added to the queue simultaneously.
+Therefore, the queue can contain up to O(n×m) elements in the worst case.
+Grid Copy:
+
+A copy of the grid is maintained in the temp variable, which takes O(n×m) space.
+Auxiliary Space for Direction Arrays:
+
+The dx and dy arrays take constant space, O(1).
+Overall, the space complexity is O(n×m).
+
+Code
+class Solution {
+public:
+
+    // Function to check if the cell is within bounds and contains a fresh orange
+    bool isSafe(int newX, int newY, vector<vector<int>>& temp) {
+        if (newX >= 0 && newY >= 0 && newX < temp.size() && newY < temp[0].size() && temp[newX][newY] == 1)
+            return true;  // Safe to proceed
+        else 
+            return false;  // Out of bounds or not a fresh orange
+    }
+
+    // Function to find the minimum time required to rot all fresh oranges
+    int orangesRotting(vector<vector<int>>& grid) {
+        queue<pair<pair<int, int>, int>> q;  // Queue to store the position of rotten oranges and the time they rot
+        vector<vector<int>> temp = grid;  // Copy of the grid to track changes
+        int minTime = 0;  // Variable to track the minimum time
+        int n = grid.size(), m = grid[0].size();  // Dimensions of the grid
+
+        // Initialize the queue with all initially rotten oranges
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (temp[i][j] == 2)
+                    q.push({{i, j}, 0});  // Push the position and initial time (0)
+            }
+        }
+
+        // Directions array to explore 4-adjacency neighbors (right, left, up, down)
+        int dx[] = {0, 0, -1, 1};
+        int dy[] = {1, -1, 0, 0};
+
+        // Perform BFS
+        while (!q.empty()) {
+            auto frontNode = q.front();  // Get the front node in the queue
+            q.pop();  // Remove the front node from the queue
+
+            int time = frontNode.second;  // Time when the current orange rotted
+            int tempX = frontNode.first.first;  // X-coordinate of the current orange
+            int tempY = frontNode.first.second;  // Y-coordinate of the current orange
+
+            // Process all 4-adjacency neighbors
+            for (int i = 0; i < 4; i++) {
+                int newX = tempX + dx[i];  // New X-coordinate
+                int newY = tempY + dy[i];  // New Y-coordinate
+
+                // If the neighbor is within bounds and is a fresh orange
+                if (isSafe(newX, newY, temp)) {
+                    q.push({{newX, newY}, time + 1});  // Push the new position and updated time
+                    minTime = time + 1;  // Update the minimum time
+                    temp[newX][newY] = 2;  // Mark the fresh orange as rotten
+                }
+            }
+        }
+
+        // Check if there are any fresh oranges left
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (temp[i][j] == 1)
+                    return -1;  // Return -1 if any fresh orange is left
+            }
+        }
+
+        return minTime;  // Return the minimum time taken to rot all fresh oranges
+    }
+};
+Explanation of Code
+isSafe Function:
+
+Checks if a given cell is within the grid bounds and contains a fresh orange.
+Returns true if the cell is valid for processing; otherwise, returns false.
+orangesRotting Function:
+
+Initialization:
+queue<pair<pair<int, int>, int>> q;: A queue to store the position of rotten oranges and the time at which they rot.
+vector<vector> temp = grid;: A copy of the original grid to track changes.
+int minTime = 0;: Variable to keep track of the minimum time required to rot all fresh oranges.
+int n = grid.size(), m = grid[0].size();: Dimensions of the grid.
+Populating the Initial Queue:
+Iterate through the grid and add all initially rotten oranges to the queue with an initial time of 0.
+BFS Traversal:
+Directions array dx and dy to explore 4-adjacency neighbors.
+While the queue is not empty, process each rotten orange by exploring its 4-adjacency neighbors.
+If a neighbor is a fresh orange, mark it as rotten, push it into the queue with an incremented time, and update the minTime.
+Final Check:
+After the BFS traversal, check if there are any fresh oranges left in the grid.
+If any fresh orange is found, return -1, indicating that not all oranges can be rotted.
+Otherwise, return the minTime, which represents the minimum time required to rot all fresh oranges.

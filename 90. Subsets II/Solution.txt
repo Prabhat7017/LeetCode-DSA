@@ -1,0 +1,64 @@
+#Intuition
+To solve the problem of finding all unique subsets of a given list of numbers, we can leverage the properties of sets to automatically handle duplicates. The total number of subsets for a list of n elements is 2^𝑛. By generating all possible subsets and using a set to store them, we ensure that only unique subsets are retained.
+
+#Approach
+Sort the Input: Start by sorting the input list. This helps in easily managing duplicates.
+Generate All Subsets: Use a bit manipulation approach to generate all possible subsets. Each subset can be represented by a binary number, where the presence of a bit (1) indicates the inclusion of the corresponding element in the subset.
+Use a Set for Uniqueness: Store each generated subset in a set to automatically handle duplicates.
+Convert Set to Vector: Finally, convert the set of subsets back to a vector of vectors for the required output format.
+Detailed Steps:
+Sort the Vector: This helps in ensuring that subsets are generated in a sorted manner.
+Bit Manipulation:
+Iterate from 0 to 2^𝑛 − 1 to cover all possible subsets.
+For each number, use its binary representation to determine which elements to include in the current subset.
+Insertion into Set: Add each subset to a set. The set will automatically handle duplicates.
+Convert Set to Vector: Finally, convert the set to a vector of vectors and return it.
+Dry Run Example:
+Let's dry run the approach with the list [1, 2, 2].
+
+Sorted Input: [1, 2, 2]
+Subsets Generation:
+Binary representation of 0 (000): []
+Binary representation of 1 (001): [1]
+Binary representation of 2 (010): [2]
+Binary representation of 3 (011): [1, 2]
+Binary representation of 4 (100): [2]
+Binary representation of 5 (101): [1, 2]
+Binary representation of 6 (110): [2, 2]
+Binary representation of 7 (111): [1, 2, 2]
+Set for Uniqueness:
+{[], [1], [2], [1, 2], [2, 2], [1, 2, 2]}
+The final set is converted to a vector of vectors and returned.
+
+#Complexity
+Time Complexity:
+𝑂(𝑛⋅2^𝑛), where n is the number of elements in the input list. This accounts for generating all subsets and inserting them into the set.
+Space Complexity:
+O(n⋅2^n), due to storing all possible subsets.
+
+Code
+class Solution {
+public:
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        sort(nums.begin(), nums.end()); // Sort the input to handle duplicates
+        set<vector<int>> st; // Set to store unique subsets
+        
+        int n = nums.size();
+        int subsetCount = 1 << n; // 2^n subsets
+        
+        // Iterate through all possible subsets
+        for (int i = 0; i < subsetCount; i++) {
+            vector<int> temp;
+            for (int j = 0; j < n; j++) {
+                if (i & (1 << j)) { // If the jth bit is set in i
+                    temp.push_back(nums[j]);
+                }
+            }
+            st.insert(temp); // Insert subset into set
+        }
+        
+        // Convert set to vector of vectors
+        vector<vector<int>> ans(st.begin(), st.end());
+        return ans;
+    }
+};

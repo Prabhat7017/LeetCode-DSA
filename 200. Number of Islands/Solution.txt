@@ -1,0 +1,158 @@
+Intuition
+Problem Context:
+The code aims to find the number of islands in a 2D grid.
+An island consists of connected land cells (‘1’).
+
+Algorithm Overview:
+The algorithm uses Depth-First Search (DFS) to explore the grid.
+For each cell containing ‘1’, it marks the entire island as visited by changing ‘1’ to ‘0’.
+The main function (numIslands) iterates through all cells and calls the helper function (helper) when it encounters an unvisited land cell.
+
+Helper Function (helper):
+The helper function recursively explores adjacent cells from a given position (i, j):
+If the current cell is out of bounds or contains water (‘0’), return.
+Mark the current cell as visited (‘0’).
+Recursively explore the four adjacent cells (up, down, left, right).
+
+Main Function (numIslands):
+Initialize ans (island count) to 0.
+Iterate through all cells in the grid:
+If the cell contains ‘1’:
+Increment ans.
+Call the helper function to mark the entire island as visited.
+
+Let’s visualize this with a simple example grid:
+Input Grid:
+1 1 0 0 0
+1 1 0 0 1
+0 0 1 1 1
+0 0 0 1 1
+1 1 0 0 0
+
+Initialize the grid.
+Initialize the island count (ans) to 0.
+Start iterating through each cell in the grid:
+Cell (0,0) contains ‘1’:
+Increment ans to 1.
+Mark (0,0) as visited (‘0’).
+Recursively explore adjacent cells: (1,0) and (0,1).
+Cell (1,0) contains ‘1’:
+Mark (1,0) as visited (‘0’).
+Recursively explore adjacent cells: (2,0).
+Cell (2,0) contains ‘1’:
+Mark (2,0) as visited (‘0’).
+Recursively explore adjacent cells: (3,0).
+Cell (3,0) contains ‘1’:
+Mark (3,0) as visited (‘0’).
+Recursively explore adjacent cells: (4,0).
+Cell (4,0) contains ‘1’:
+Mark (4,0) as visited (‘0’).
+No more adjacent cells.
+Cell (0,1) contains ‘1’:
+Mark (0,1) as visited (‘0’).
+Recursively explore adjacent cells: (1,1) and (0,4).
+Cell (1,1) contains ‘1’:
+Mark (1,1) as visited (‘0’).
+Recursively explore adjacent cells: (1,4).
+Cell (1,4) contains ‘1’:
+Mark (1,4) as visited (‘0’).
+No more adjacent cells.
+Cell (0,4) contains ‘1’:
+Mark (0,4) as visited (‘0’).
+No more adjacent cells.
+Cell (2,2) contains ‘1’:
+Increment ans to 2.
+Mark (2,2) as visited (‘0’).
+Recursively explore adjacent cells: (2,3) and (3,2).
+Cell (2,3) contains ‘1’:
+Mark (2,3) as visited (‘0’).
+No more adjacent cells.
+Cell (3,2) contains ‘1’:
+Mark (3,2) as visited (‘0’).
+No more adjacent cells.
+The DFS traversal is complete. The corrected island count (ans) is 3.
+Final result: There are 3 islands in the grid.
+
+Approach
+DFS (Depth-First Search) Approach:
+We’ll use DFS to explore the grid and identify connected components (islands).
+For each cell containing ‘1’, we’ll perform DFS to mark the entire island as visited.
+Algorithm Steps:
+Initialize a boolean matrix visited of the same size as the given matrix. Initially, all cells are unvisited.
+Initialize count to 0 (to store the answer).
+Traverse the entire grid:
+If the current cell contains ‘1’ and is not visited:
+Call the DFS function to explore the entire island.
+Increment count by 1 (since we found an island).
+Return count as the final answer.
+DFS Function (dfs):
+Given a cell (row, col):
+Mark it as visited (set visited[row][col] = true).
+Explore its adjacent cells (up, down, left, right):
+If the neighbor is safe to visit (within bounds and contains ‘1’ and is not visited), recursively call DFS on the neighbor.
+Time Complexity:
+The DFS traversal visits each cell at most once.
+Therefore, the time complexity is O(MxN), where M is the number of rows and N is the number of columns.
+Space Complexity:
+The space complexity includes the recursive call stack (maximum depth of recursion).
+It is O(min(M, N)) (excluding the input grid itself).
+
+Complexity
+Time complexity:
+Certainly! The time complexity of the Depth-First Search (DFS) algorithm used in the code to count the number of islands in a 2D grid is O(MxN), where M is the number of rows and N is the number of columns in the grid.
+
+Here’s why:
+
+DFS Traversal: For each cell that is part of an island (‘1’), the DFS traversal will visit all connected cells that are also part of the same island and mark them as visited (‘0’).
+Visiting Cells: Each cell in the grid will be visited at most once. If a cell is part of an island, it will be visited during the DFS traversal. If it’s water (‘0’), it will be checked but not traversed further.
+Total Operations: The total number of operations is proportional to the size of the grid, which is the product of the number of rows and columns.
+Therefore, the overall time complexity is linear with respect to the number of cells in the grid, which is O**(MxN)**. This means that the algorithm will scale linearly with the increase in the size of the grid. If you have any more questions or need further clarification, feel free to ask! 😊
+
+Space complexity:
+The space complexity of an algorithm refers to the total amount of memory space that it requires to run to completion. It takes into account all the memory that the algorithm uses, including:
+
+The space required for variables and data structures.
+The space taken up by function calls and the execution context.
+Any additional space used during the algorithm’s operation, such as for temporary storage.
+In the context of the Depth-First Search (DFS) algorithm used in the code you provided earlier, the space complexity is primarily determined by the size of the recursive call stack. Since the DFS could potentially visit every cell in the grid once, the space complexity is O(MxN) in the worst case, where M is the number of rows and N is the number of columns in the grid.
+
+However, if we consider the space used by the input grid itself as a constant, because it’s given and does not change with the algorithm’s execution, then the extra space used by the algorithm (auxiliary space complexity) is O(min(M,N)). This is because in the worst case, the size of the call stack will be the maximum depth of the recursion, which corresponds to the largest possible number of cells in a row or a column that the DFS would have to visit before backtracking.
+
+To summarize, the space complexity of the DFS algorithm in the worst case is O(MxN), but the auxiliary space complexity, which excludes the input’s space, is O(min(M,N))123. If you have any more questions or need further clarification, feel free to ask! 😊
+
+Code
+class Solution {
+public:
+    // Helper function to perform DFS on the grid
+    void helper(vector<vector<char>>& grid, int i, int j){
+        // Base case: check for invalid indices and if the current cell is water ('0')
+        if(i<0 || j<0 || i>=grid.size() || j>=grid[i].size() || grid[i][j]=='0')
+          return;
+        
+        // Mark the current cell as visited by setting it to '0' (water)
+        grid[i][j]='0';
+
+        // Recursively call helper function for all adjacent cells
+        helper(grid, i+1, j); // Down
+        helper(grid, i, j+1); // Right
+        helper(grid, i, j-1); // Left
+        helper(grid, i-1, j); // Up
+    }
+
+    // Main function to count the number of islands in the grid
+    int numIslands(vector<vector<char>>& grid) {
+        int ans = 0; // Initialize count of islands to 0
+        // Iterate over each cell in the grid
+        for(int i = 0; i < grid.size(); i++){
+            for(int j = 0; j < grid[i].size(); j++){
+                // If the cell contains '1', it is part of an island
+                if(grid[i][j] == '1') {
+                    ans++; // Increment the island count
+                    // Call the helper function to mark the entire island as visited
+                    helper(grid, i, j);
+                }
+            }
+        }
+        return ans; // Return the total number of islands found
+    }
+};
